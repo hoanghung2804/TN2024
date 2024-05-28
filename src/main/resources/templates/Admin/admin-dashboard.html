@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+
+<title>Fresh Shop</title>
+
+<th:block th:replace="~{Admin/Admin-style/Admin-template-css:: html}"></th:block>
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .select-style {
+            position: absolute;
+            right: 0;
+            top: 295px;
+            width: 200px;
+        }
+
+        .select-style select {
+            width: 100%;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: rgb(128, 255, 128)  no-repeat right center;
+            background-size: 15px;
+            color: #333;
+        }
+    /* CSS cho tất cả các bảng */
+    table {
+        width: 90%; /* Giảm chiều rộng của bảng xuống còn 90% */
+        border-collapse: separate; /* Cho phép thêm bo viền xung quanh bảng */
+        border: 2px solid #4CAF50; /* Thêm bo viền cho bảng */
+        border-radius: 10px; /* Làm tròn góc của bo viền */
+        margin: 20px auto; /* Căn giữa bảng */
+        background-color: #f8f8f8; 
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px 15px; /* Tăng padding để cung cấp thêm không gian cho nội dung */
+        text-align: center;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #eaeaea;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    /* CSS cho tiêu đề và siêu dữ liệu */
+    h5 {
+        color:  #4CAF50; 
+        margin-bottom: 10px;
+    }
+    div {
+        margin-bottom: 5px;
+        color: #333; 
+    }   
+</style>
+</head>
+<body>
+	<!-- Start Main Top -->
+	<div th:replace="~{Admin/Admin-fragment/Admin-header.html:: header}"></div>
+	<!-- End Main Top -->
+
+	<!-- Start Sidebar -->
+	<div th:replace="~{Admin/Admin-fragment/Admin-sidebar.html:: aside}"></div>
+	<!-- End Sidebar -->
+
+	<main id="main" class="main">
+		<!-- Start Page Title-->
+		<div class="pagetitle">
+			<h1 th:text="#{table.tbDashboard}"></h1>
+
+		</div>
+		<!-- End Page Title -->
+
+		<section class="section dashboard">
+			<div class="row">
+
+				<!-- Left side columns -->
+				<div>
+					<div class="row">
+
+						<!-- Sales Card -->
+						<div class="col-xxl-4 col-md-6 col-lg-3">
+							<div class="card info-card sales-card">
+
+								<div class="card-body">
+									<h5 class="card-title" th:text="#{table.profit}"></h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-currency-dollar"></i>
+										</div>
+										<div class="ps-3">
+											<h6 class="profit" th:text="${totalAmount}"></h6>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<!-- End Sales Card -->
+
+						<!-- Revenue Card -->
+						<div class="col-xxl-4 col-md-6 col-lg-3">
+							<div class="card info-card revenue-card">
+
+								<div class="card-body">
+									<h5 class="card-title" th:text="#{category}"></h5>
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-bookmark-check"></i>
+										</div>
+										<div class="ps-3">
+											<h6 th:text="${categoryNumber}"></h6>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<!-- End Revenue Card -->
+
+						<!-- Customers Card -->
+						<div class="col-xxl-4 col-xl-12 col-lg-3">
+
+							<div class="card info-card customers-card">
+
+								<div class="card-body">
+									<h5 class="card-title" th:text="#{table.user}"></h5>
+
+									<div class="d-flex align-items-center">
+										<div
+											class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+											<i class="bi bi-people"></i>
+										</div>
+										<div class="ps-3">
+											<h6 th:text="${totalCount} + ' users'"></h6>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+						<!-- End Customers Card -->
+					</div>
+				</div>
+			
+
+
+
+
+    <div class="select-style">
+        <select id="selector">
+           <option value="">Chọn một bảng</option>
+            <option value="dailySales">7 Ngày gần nhất</option>
+            <option value="recentSales">Theo Tháng</option>
+            <option value="yearlySales">Theo năm</option>
+        </select>
+    </div>
+   
+<!-- Theo ngày -->
+<div class="col-12" id="dailySales">
+    <div class="card-body">
+        <h5 class="card-title">Sales last 7 days</h5>
+        <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-cash"></i>
+            </div>
+            <div class="ps-3">
+				<h6><b>Tổng tiền 7 ngày gần nhất</b></h6>
+                <h6 class="sales" th:text="${totalSalesLastSevenDays}"> </h6>
+            </div>
+        </div>
+        <!-- New table -->
+        <table class="styled-table">
+            <thead>
+              <tr>
+        <th>Date </th>
+        <th>Sale ($)</th>
+    </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dailySale : ${dailySalesLastSevenDays}">
+                    <td th:text="${dailySale['date']}"></td>
+                    <td th:text="${dailySale['total']}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Kết thúc theo ngày -->
+
+<!-- Theo năm -->
+<div class="col-12" id="yearlySales">
+    <div class="card-body">
+        <h5 class="card-title">Sales This Year</h5>
+           
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Sale ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sales : ${yearlySales}">
+                    <td th:text="${sales['year']}"></td>
+                    <td th:text="${sales['total']}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Kết thúc theo năm -->
+
+<!-- Recent Sales -->
+<div class="col-12" id="recentSales">
+    <div class="card recent-sales overflow-auto">
+        <div class="card-body" th:if="${listOrderReport != null}">
+            <h5 class="card-title" th:text="#{table.tbReport}"></h5>
+            <table class="styled-table">
+                <thead class="table-success">
+                    <tr>
+                        <th scope="col" th:text="#{table.date}"></th>
+                        <th scope="col" th:text="#{table.profit}"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rp : ${listOrderReport}">
+                        <td th:text="${rp.date}"></td>
+                        <td class="profit" th:text="${rp.amount}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+				
+				
+				<!-- Top Selling -->
+			</div>
+							<!-- Reports -->
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title" th:text="#{table.tbReport}"></h5>
+
+							<!-- Line Chart -->
+							<div id="reportsChart"></div>
+							<!-- End Line Chart -->
+						</div>
+
+					</div>
+				</div>
+				<!-- End Reports -->
+		</section>
+	</main>
+	<!-- Start Footer -->
+	<!--     <div th:replace="~{Admin/Admin-fragment/Admin-footer.html:: footer}"></div> -->
+	<!-- End Footer -->
+
+	<a href="#"
+		class="back-to-top d-flex align-items-center justify-content-center"><i
+		class="bi bi-arrow-up-short"></i></a>
+
+	<th:block th:replace="~{Admin/Admin-style/Admin-template-scr:: html}"></th:block>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script th:inline="javascript">
+    // Dữ liệu mẫu
+    var dateList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var countContactList = [50, 70, 90, 120, 100, 80, 60, 40, 30, 50, 70, 90];
+    var countProductList = [30, 40, 50, 60, 80, 100, 120, 90, 70, 50, 30, 20];
+
+    // Insert dummy data points at the beginning of each series
+    countContactList.unshift(0);
+    countProductList.unshift(0);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        Highcharts.chart('reportsChart', {
+            series: [{
+                name: 'Customer',
+                data: countContactList,
+                color: 'rgba(65, 84, 241, 0.8)',
+                connectNulls: true // Connect data points to the axis
+            }, {
+                name: 'Product',
+                data: countProductList,
+                color: 'rgba(255, 119, 29, 0.8)',
+                connectNulls: true // Connect data points to the axis
+            }],
+            chart: {
+                height: 350,
+                type: 'line',
+            },
+            title: {
+                text: 'Report Chart (2023)'
+            },
+            xAxis: {
+                type: 'category',
+//                 categories: dateList,
+                startOnTick: false,
+                endOnTick: false, // Thêm thuộc tính này để ngăn chặn hiển thị số 12 ở cuối trục x
+                minPadding: 0
+            },
+            yAxis: {
+                title: {
+                    text: 'Count'
+                },
+                min: 0 // Set the minimum value of y-axis to 0
+            },
+            plotOptions: {
+                line: {
+                    marker: {
+                        enabled: false
+                    },
+                    lineWidth: 2 // Adjust the line width here
+                }
+            },
+            colors: ['#4154f1', '#ff771d'],
+            tooltip: {
+                xDateFormat: '%d/%m/%y'
+            }
+        });
+    });
+
+document.addEventListener("DOMContentLoaded", function () {
+    var profitElements = document.getElementsByClassName("profit");
+
+    for (var i = 0; i < profitElements.length; i++) {
+        var profitElement = profitElements[i];
+        var profitAmount = parseFloat(profitElement.textContent);
+
+        // Kiểm tra xem số liệu có phải là một số hợp lệ không trước khi định dạng
+        if (!isNaN(profitAmount)) {
+            // Định dạng số tiền theo hàng nhìn với đơn vị tiền của Việt Nam
+            var formattedProfit = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(profitAmount);
+
+            // Gán lại giá trị đã định dạng vào phần tử HTML
+            profitElement.textContent = formattedProfit;
+        }
+    }
+});
+
+$(document).ready(function() {
+    // Ẩn cả ba bảng khi tải trang
+    $("#recentSales").css('display', 'none');
+    $("#dailySales").css('display', 'none');
+    $("#yearlySales").css('display', 'none'); // Thêm nếu này
+
+    $("#selector").change(function() {
+        // Lấy giá trị của bảng được chọn
+        var selectedValue = $(this).val();
+
+        // Ẩn cả ba bảng
+        $("#recentSales").css('display', 'none');
+        $("#dailySales").css('display', 'none');
+        $("#yearlySales").css('display', 'none');
+
+        // Nếu giá trị là "recentSales", "dailySales", hoặc "yearlySales"
+        if (selectedValue === "recentSales"){
+            $("#recentSales").css('display', 'block');
+        }
+        else if(selectedValue === "dailySales"){
+            $("#dailySales").css('display', 'block');
+        }
+        else if(selectedValue === "yearlySales"){  // Thêm đoạn này
+            $("#yearlySales").css('display', 'block');
+        }
+     });
+});
+</script>
+
+
+
+</body>
+</html>
